@@ -3,11 +3,10 @@ pipeline {
     agent any
 
     parameters {
-        booleanParam(Use Control + Shift + m to toggle the tab key moving focus. Alternatively, use esc then tab to move to the next interactive element on the page.
-
+        booleanParam(
             name: 'FORCE_FAILURE',
             defaultValue: false,
-            description: 'Select to test failure email'
+            description: 'Check to test failure email'
         )
     }
 
@@ -20,7 +19,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                echo 'Demo build completed'
+                echo 'Build completed'
             }
         }
 
@@ -28,9 +27,9 @@ pipeline {
             steps {
                 script {
                     if (params.FORCE_FAILURE) {
-                        error('Intentional failure for testing')
+                        error('Intentional test failure')
                     }
-                    echo 'All demo tests passed'
+                    echo 'Test passed'
                 }
             }
         }
@@ -51,7 +50,7 @@ Status: SUCCESS
 Build URL: ${env.BUILD_URL}
 
 Regards,
-Jenkins CI/CD
+Jenkins
 """
             )
         }
@@ -69,10 +68,8 @@ Build: ${env.BUILD_NUMBER}
 Status: FAILURE
 Build URL: ${env.BUILD_URL}
 
-Please check Console Output.
-
 Regards,
-Jenkins CI/CD
+Jenkins
 """
             )
         }
