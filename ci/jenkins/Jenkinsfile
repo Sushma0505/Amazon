@@ -1,0 +1,79 @@
+
+pipeline {
+    agent any
+
+    parameters {
+        booleanParam(
+            name: 'FORCE_FAILURE',
+            defaultValue: false,
+            description: 'Select to test failure email'
+        )
+    }
+
+    stages {
+        stage('Validate') {
+            steps {
+                echo 'Validation completed'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo 'Demo build completed'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                script {
+                    if (params.FORCE_FAILURE) {
+                        error('Intentional failure for testing')
+                    }
+                    echo 'All demo tests passed'
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            emailext(
+                to: 'YOUR_EMAIL@gmail.com',
+                subject: "SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: """Hello Team,
+
+Jenkins build completed successfully.
+
+Job: ${env.JOB_NAME}
+Build: ${env.BUILD_NUMBER}
+Status: SUCCESS
+Build URL: ${env.BUILD_URL}
+
+Regards,
+Jenkins CI/CD
+"""
+            )
+        }
+
+        failure {
+            emailext(
+                to: 'YOUR_EMAIL@gmail.com',
+                subject: "FAILURE: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: """Hello Team,
+
+Jenkins build failed.
+
+Job: ${env.JOB_NAME}
+Build: ${env.BUILD_NUMBER}
+Status: FAILURE
+Build URL: ${env.BUILD_URL}
+
+Please check Console Output.
+
+Regards,
+Jenkins CI/CD
+"""
+            )
+        }
+    }
+}
