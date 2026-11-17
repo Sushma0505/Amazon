@@ -6,7 +6,7 @@ pipeline {
         booleanParam(
             name: 'FORCE_FAILURE',
             defaultValue: false,
-            description: 'Check to test failure email'
+            description: 'Test failure email'
         )
     }
 
@@ -29,7 +29,7 @@ pipeline {
                     if (params.FORCE_FAILURE) {
                         error('Intentional test failure')
                     }
-                    echo 'Test passed'
+                    echo 'All tests passed'
                 }
             }
         }
@@ -39,7 +39,7 @@ pipeline {
         success {
             emailext(
                 to: 'sushmasus2021@gmail.com',
-                subject: "SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                subject: "SUCCESS - ${env.JOB_NAME}",
                 body: """Hello Team,
 
 Jenkins build completed successfully.
@@ -58,7 +58,7 @@ Jenkins
         failure {
             emailext(
                 to: 'sushmasus2021@gmail.com',
-                subject: "FAILURE: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                subject: "FAILURE - ${env.JOB_NAME}",
                 body: """Hello Team,
 
 Jenkins build failed.
